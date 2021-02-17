@@ -44,7 +44,7 @@ services:
       - DB_USER=wikiuser
       - DB_PASS=sqlpass
       - DB_NAME=my_wiki
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:9191
   mysql:
     image: mariadb:10.3
     restart: unless-stopped
@@ -86,7 +86,7 @@ services:
         aliases:
          - wdqs.svc
     environment:
-      - WIKIBASE_HOST=wikibase.svc
+      - WIKIBASE_HOST=10.225.250.244:8181
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
     expose:
@@ -116,7 +116,7 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=wikibase.svc
+     - WIKIBASE_HOST=10.225.250.244:8181
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
   elasticsearch:
@@ -143,13 +143,18 @@ services:
         aliases:
          - quickstatements.svc
     environment:
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:8181
+      - WIKIBASE_HOST=wikibase.svc
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:9191
+      - QS_PUBLIC_HOST_AND_PORT=http://10.225.250.244:9191
+      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:8181
+      - WB_PUBLIC_HOST_AND_PORT=http://10.225.250.244:8181
       - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
       - WB_PROPERTY_NAMESPACE=122
       - "WB_PROPERTY_PREFIX=Property:"
       - WB_ITEM_NAMESPACE=120
       - "WB_ITEM_PREFIX=Item:"
+      - OAUTH_CONSUMER_KEY=2f2e2f92ac426703473c54be9163bf86
+      - OAUTH_CONSUMER_SECRET=79d01a02cee133931953835451f07f6483f2ea96
 
 volumes:
   mediawiki-mysql-data:
