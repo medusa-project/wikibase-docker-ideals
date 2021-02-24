@@ -37,14 +37,14 @@ services:
       - MW_ELASTIC_PORT=9200
       # CONFIG - Change the default values below
       - MW_ADMIN_NAME=WikibaseAdmin
-      - MW_ADMIN_PASS=WikibaseDockerAdminPass
+      - MW_ADMIN_PASS=${ENV_VAR_WikibaseDockerAdminPass}
       - MW_ADMIN_EMAIL=admin@example.com
       - MW_WG_SECRET_KEY=secretkey
       # CONFIG - Change the default values below (should match mysql values in this file)
       - DB_USER=wikiuser
-      - DB_PASS=sqlpass
+      - DB_PASS=${ENV_VAR_sqlpass}
       - DB_NAME=my_wiki
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:9191
+      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
   mysql:
     image: mariadb:10.3
     restart: unless-stopped
@@ -55,7 +55,7 @@ services:
       # CONFIG - Change the default values below (should match values passed to wikibase)
       MYSQL_DATABASE: 'my_wiki'
       MYSQL_USER: 'wikiuser'
-      MYSQL_PASSWORD: 'sqlpass'
+      MYSQL_PASSWORD: '${ENV_VAR_sqlpass}'
     networks:
       default:
         aliases:
@@ -86,7 +86,7 @@ services:
         aliases:
          - wdqs.svc
     environment:
-      - WIKIBASE_HOST=10.225.250.244:8181
+      - WIKIBASE_HOST=${ENV_VAR_wikibase_host_and_port}
       - WDQS_HOST=wdqs.svc
       - WDQS_PORT=9999
     expose:
@@ -116,7 +116,7 @@ services:
         aliases:
          - wdqs-updater.svc
     environment:
-     - WIKIBASE_HOST=10.225.250.244:8181
+     - WIKIBASE_HOST=${ENV_VAR_wikibase_host_and_port}
      - WDQS_HOST=wdqs.svc
      - WDQS_PORT=9999
   elasticsearch:
@@ -130,31 +130,25 @@ services:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
   # CONFING, in order to not load quickstatements then remove this entire section
-  quickstatements:
-    image: wikibase/quickstatements:latest
-    ports:
-     - "9191:80"
-    depends_on:
-     - wikibase
-    volumes:
-     - quickstatements-data:/quickstatements/data
-    networks:
-      default:
-        aliases:
-         - quickstatements.svc
-    environment:
-      - WIKIBASE_HOST=wikibase.svc
-      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:9191
-      - QS_PUBLIC_HOST_AND_PORT=http://10.225.250.244:9191
-      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://10.225.250.244:8181
-      - WB_PUBLIC_HOST_AND_PORT=http://10.225.250.244:8181
-      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
-      - WB_PROPERTY_NAMESPACE=122
-      - "WB_PROPERTY_PREFIX=Property:"
-      - WB_ITEM_NAMESPACE=120
-      - "WB_ITEM_PREFIX=Item:"
-      - OAUTH_CONSUMER_KEY=2f2e2f92ac426703473c54be9163bf86
-      - OAUTH_CONSUMER_SECRET=79d01a02cee133931953835451f07f6483f2ea96
+#    image: wikibase/quickstatements:latest
+#    ports:
+#     - "9191:80"
+#    depends_on:
+#     - wikibase
+#    volumes:
+#     - quickstatements-data:/quickstatements/data
+#    networks:
+#      default:
+#        aliases:
+#         - quickstatements.svc
+#    environment:
+#      - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
+#      - WB_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:8181
+#      - WIKIBASE_SCHEME_AND_HOST=http://wikibase.svc
+#      - WB_PROPERTY_NAMESPACE=122
+#      - "WB_PROPERTY_PREFIX=Property:"
+#      - WB_ITEM_NAMESPACE=120
+#      - "WB_ITEM_PREFIX=Item:"
 
 volumes:
   mediawiki-mysql-data:

@@ -1,0 +1,28 @@
+# This is a template for the .env file that has
+# environment variable values, and is read by docker-compose
+
+# Step 1 - add .env to your .gitignore file so that 
+# secrets are not copied to your code repository
+
+# Step 2 - copy this file to .env $ cp env-template .env
+
+# Step 3 - edit the .env file and update the below values
+
+# If this file is updated, also update: <The location of a secure file that has the secrets below>
+
+# Set the Wikibase Docker Admin password
+ENV_VAR_WikibaseDockerAdminPass=xxxxxxxxxxxxxxx
+
+# Set the DB_PASS for the wikibase container and the MYSQL_PASSWORD for the MariaDB container. The same password for both are the same.
+ENV_VAR_sqlpass=xxxxxxxxxxxxxxx
+
+# Set the password for smtp.sparkpostmail.com. note: key is also on box: https://uofi.app.box.com/notes/738717931489
+# TO DO: update docker compose to use the below key
+ENV_VAR_sparkpostpass=xxxxxxxxxxxxxxxxxxxxxxxx
+
+#
+# DNS or IP address and port values needed for the wdqs and wdqs-updater cotainers
+# These are NOT secrets, but could be different if deployed on different servers.
+#
+
+ENV_VAR_wikibase_host_and_port=10.225.250.239:8181
