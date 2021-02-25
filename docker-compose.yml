@@ -45,6 +45,7 @@ services:
       - DB_PASS=${ENV_VAR_sqlpass}
       - DB_NAME=my_wiki
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
+      - SMTP_PASS=${ENV_VAR_sparkpostpass}
   mysql:
     image: mariadb:10.3
     restart: unless-stopped
