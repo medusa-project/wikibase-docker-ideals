@@ -22,6 +22,7 @@ services:
     volumes:
       - mediawiki-images-data:/var/www/html/images
       - quickstatements-data:/quickstatements/data
+      - uiuc-library-config/LocalSettings.php.template:/LocalSettings.php.template
     depends_on:
     - mysql
     - elasticsearch

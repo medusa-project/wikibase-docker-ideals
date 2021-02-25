@@ -26,18 +26,3 @@ wfLoadExtension( 'cldr' );
 #EntitySchema
 wfLoadExtension( 'EntitySchema' );
 
-# Additions for UIUC Library wikibase
-# for authorities.library.illinois.edu setup
-# additional variable assignments below
-
-${DOLLAR}wgPasswordReminderResendTime = 0;
-
-${DOLLAR}wgEmergencyContact = 'jmtroy2@illinois.edu';
-${DOLLAR}wgPasswordSender = 'jmtroy2@illinois.edu';
-
-${DOLLAR}wgSMTP['host'] = "smtp.sparkpostmail.com";
-${DOLLAR}wgSMTP['IDhost'] = "library.illinois.edu";
-${DOLLAR}wgSMTP['port'] = 587;
-${DOLLAR}wgSMTP['auth'] = true;
-${DOLLAR}wgSMTP['username'] = "SMTP_Injection";
-${DOLLAR}wgSMTP['password'] = "$SMTP_PASS";
