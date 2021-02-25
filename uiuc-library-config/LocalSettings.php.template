@@ -69,5 +69,6 @@ ${DOLLAR}wgSMTP['IDhost'] = "library.illinois.edu";
 ${DOLLAR}wgSMTP['port'] = 587;
 ${DOLLAR}wgSMTP['auth'] = true;
 ${DOLLAR}wgSMTP['username'] = "SMTP_Injection";
-${DOLLAR}wgSMTP['password'] = "$SMTP_PASS"
+${DOLLAR}wgSMTP['password'] = "$SMTP_PASS";
+
 
