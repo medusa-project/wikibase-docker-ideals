@@ -47,8 +47,25 @@ sudo su - wikibase
 # more info at: : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
 mkdir .ssh
 cd .ssh
-# RUN this manually, as it prompts for file (leave blank), and pass phrase (leave blank): ssh-keygen -t ed25519 -C "jmtroy2@illinois.edu"
-# eval "$(ssh-agent -s)"
+# RUN the below  manually, as it prompts for file (leave blank), and pass phrase (leave blank):
+ssh-keygen -t ed25519 -C "jmtroy2@illinois.edu"
+# then run the below
+eval "$(ssh-agent -s)"
 # THEN A MANUAL STEP: Add ssh key to github (see: https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account 
 
-# git clone git@github.com:medusa-project/wikibase-docker-ideals.git
+# Then change the directory back to /home/wikibase, and clone the wikibase-dockers-ideals.git
+cd /home/wikibase
+git clone git@github.com:medusa-project/wikibase-docker-ideals.git
+
+# before running follow the instructions to create the .env file
+cp env-template .env
+# edit the .env file and update with passwords and correct host name for wikibase-host
+emacs .env
+
+# to start wikibase
+cd /home/wikibase
+docker-compose up
+# or to run int detached mode (in the background) use the -d option as below #
+docker-compose up -d
+
+

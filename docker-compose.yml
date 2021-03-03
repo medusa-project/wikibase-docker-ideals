@@ -47,6 +47,7 @@ services:
       - DB_NAME=my_wiki
       - QS_PUBLIC_SCHEME_HOST_AND_PORT=http://localhost:9191
       - SMTP_PASS=${ENV_VAR_sparkpostpass}
+      - UIUC_EMAIL_SENDER=${ENV_VAR_uiuc_email_sender}
   mysql:
     image: mariadb:10.3
     restart: unless-stopped

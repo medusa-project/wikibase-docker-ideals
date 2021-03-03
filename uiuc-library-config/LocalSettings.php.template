@@ -1,5 +1,10 @@
 <?php
 /**
+ * NOTE ADDED BY JOE TROY 3/3/2021: This file is mounted over the LocalSettings.php.template
+ * in the wikibase image. The mounting is done in the docker-compose.yml file - See the
+ * wikibase / volumnes section in the docker-compose.yml file. This is done to add configuration
+ * assignments (see bottom of this file).
+ * 
  * ----------------------------------------------------------------------------------------
  * This file is provided by the wikibase/wikibase docker image.
  * This file will be passed through envsubst which will replace "${DOLLAR}" with "$".
@@ -61,8 +66,8 @@ require_once "${DOLLAR}IP/extensions/Wikibase/client/ExampleSettings.php";
 
 ${DOLLAR}wgPasswordReminderResendTime = 0;
 
-${DOLLAR}wgEmergencyContact = 'jmtroy2@illinois.edu';
-${DOLLAR}wgPasswordSender = 'jmtroy2@illinois.edu';
+${DOLLAR}wgEmergencyContact = "$UIUC_EMAIL_SENDER";
+${DOLLAR}wgPasswordSender = "$UIUC_EMAIL_SENDER";
 
 ${DOLLAR}wgSMTP['host'] = "smtp.sparkpostmail.com";
 ${DOLLAR}wgSMTP['IDhost'] = "library.illinois.edu";

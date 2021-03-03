@@ -24,5 +24,11 @@ ENV_VAR_sparkpostpass=xxxxxxxxxxxxxxxxxxxxxxxx
 # DNS or IP address and port values needed for the wdqs and wdqs-updater cotainers
 # These are NOT secrets, but could be different if deployed on different servers.
 #
-
 ENV_VAR_wikibase_host_and_port=10.225.250.239:8181
+
+#
+# Add any email address below so they are not stored in the public github
+#
+ENV_VAR_uiuc_email_sender=<PUT EMAIL SENDING LOGIN CONFIRMATION AND PASSWORD CHANGE HERE>
+
+
