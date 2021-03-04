@@ -1,5 +1,7 @@
 ## wikibase-docker
 
+The readme for UIUC Library demo implementation can be found here: https://github.com/medusa-project/wikibase-docker-ideals/blob/main/README-demo-install.md 
+
 This repo contains [Docker](https://www.docker.com/) images needed to setup a local Wikibase instance and a query service.
 
 Each image contained within this repo has its own README with more detailed information:
