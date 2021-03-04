@@ -54,4 +54,132 @@ the end of the file. See the contents in the file after the line **"# Additions 
 These are the settings needed to get emails to work.
 - Then in the docker-compose.yml file, in the "wikibase:" service section, and then in
 the "volumes:" section a line was added to mount the new file over the file in the docker container. 
-That line is "- ./uiuc-library-config/LocalSettings.php.template:/LocalSettings.php.template" 
+That line is "- ./uiuc-library-config/LocalSettings.php.template:/LocalSettings.php.template"
+
+Changes to store secrets in a .env file, instead of storing them directly in the docker-compose.yml file. This
+change also includes updating the .gitignore file so that the .env is not stored in github repository.  A new
+file called env-template was created that has the template for the .env file contents.
+
+Changes to disable **Quickstatements** : In the docker-compose.yml the quickstatements section has been commented out.
+
+### Implementation instructions.
+
+##### Provision AWS resources with terraform.
+
+This section does not go into detail about how to use terraform.  However the terraform repo 
+at https://code.library.illinois.edu/projects/TER/repos/aws-wikibase-demo-service/browse can be used
+to provision the EC2 wikibase runs on, and to configure the ALB listener rules, and target groups to route
+internet traffic to the EC2.  Note: the terraform repository that manages certificates for medusa project EC2s, 
+including wikibase-demo is at https://code.library.illinois.edu/projects/TER/repos/aws-acm-certs-medusa/browse ,
+
+Generally, the steps to provision the resources are:
+- clone the terraform repository: git clone https://code.library.illinois.edu/scm/ter/aws-wikibase-demo-service.git
+- logon to AWS login: aws login
+- AWS login will prompt for your password, request 2-factor authentication, and prompt you to select the proper AWS 
+account.
+- then run terraform plan to inspect the changes terraform plans to make: terraform plan
+- Then run terraform apply to make the changes: terraform apply
+
+##### Install wikibase and dependencies on the EC2
+
+Installation steps:
+
+from your local machine ssh into the EC2 as the centos user. Below assumes you have stored the 
+.pem file in your .ssh and that aws-authorities-demo.library.illinois.edu routes to the EC2.
+```
+ssh -i ~/.ssh/medusa_prod.pem centos@aws-authorities-demo.library.illinois.edu
+```
+
+Once on the EC2 command line the below commands can be run:
+```
+# Install Docker
+# more info at: https://docs.docker.com/engine/install/centos/
+sudo yum install -y yum-utils
+
+sudo yum-config-manager \
+   --add-repo \
+   https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install docker-ce docker-ce-cli containerd.io
+
+# start docker
+systemctl start docker
+# check docker status
+systemctl status docker
+
+# setup docker to start on reboot
+# more info at: https://docs.docker.com/engine/install/linux-postinstall/#configure-docker-to-start-on-boot
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+# install docker compose
+# more info at: https://docs.docker.com/compose/install/
+sudo curl -L "https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+# install emacs
+sudo yum install emacs
+
+# install git
+sudo yum install git
+
+# create wikibase service user and add to docker group
+sudo useradd --system --create-home --groups docker wikibase
+```
+
+Then the follow commands are run as the wikibase user
+```
+#
+# THE STEPS BELOW RUN AS THE wikibase USER
+#
+# change to wikibase user and clone wikibase-docker-ideals
+# (note that this step does not setup ssh keys)
+sudo su - wikibase
+
+# clone the wikibase-docker-ideals repository using https (directions for ssh are below, but commented out)
+cd /home/wikibase
+git clone https://github.com/medusa-project/wikibase-docker-ideals.git
+
+# BELOW ARE INSTUCTIONS IF USING SSH to interact with github is neede - THESE STEPS ARE COMMENTED OUT.
+# setup ssh key for git hub
+# more info at: : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
+# mkdir -p .ssh
+# cd .ssh
+# RUN the below  manually, as it prompts for file (leave blank), and pass phrase (leave blank):
+# ssh-keygen -t ed25519 -C "jmtroy2@illinois.edu"
+# then run the below
+# eval "$(ssh-agent -s)"
+# THEN A MANUAL STEP: Add ssh key to github (see: https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account 
+# Then change the directory back to /home/wikibase, and clone the wikibase-dockers-ideals.git
+# cd /home/wikibase
+# git clone git@github.com:medusa-project/wikibase-docker-ideals.git
+
+# before running follow the instructions to create the .env file
+cp env-template .env
+# edit the .env file and update with passwords and correct host name for wikibase-host
+emacs .env
+```
+
+The next step is to open the new .env file with the emacs editor.  Below are the changes you need to make.
+- Set the Wikibase Docker Admin password. Example: ENV_VAR_WikibaseDockerAdminPass=**some password no one will guess**
+- Set the DB_PASS for the wikibase container and the MYSQL_PASSWORD for the MariaDB container. 
+The password for both are the same. Example: ENV_VAR_sqlpass=**another password no one will guess**
+- Set the password for smtp.sparkpostmail.com. note: key is also on box: https://uofi.app.box.com/notes/738717931489. 
+Example: ENV_VAR_sparkpostpass=**look in box or ask IMS for the sparkpost password**
+- DNS or IP address and port values needed for the wdqs and wdqs-updater containers. Example: ENV_VAR_wikibase_host_and_port=**10.225.250.218:8181** 
+or ENV_VAR_wikibase_host_and_port=**demo.authorities.library.illinois.edu**
+- Add any email address below so they are not stored in the public github. Example: NV_VAR_uiuc_email_sender=**<PUT EMAIL SENDING LOGIN CONFIRMATION AND PASSWORD CHANGE HERE>**
+
+Once you have cloned the repo, installed dependencies and created/updated the .env file, you can now start wikibase docker.
+```
+# to start wikibase
+cd /home/wikibase/wikibase-docker-ideals
+docker-compose up
+# or to run int detached mode (in the background) use the -d option as below #
+docker-compose up -d
+```
+
+
+
+ 

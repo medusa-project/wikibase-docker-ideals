@@ -68,7 +68,7 @@ cp env-template .env
 emacs .env
 
 # to start wikibase
-cd /home/wikibase
+cd /home/wikibase/wikibase-docker-ideals
 docker-compose up
 # or to run int detached mode (in the background) use the -d option as below #
 docker-compose up -d
