@@ -43,19 +43,24 @@ sudo useradd --system --create-home --groups docker wikibase
 # change to wikibase user and clone wikibase-docker-ideals
 # (note that this step does not setup ssh keys)
 sudo su - wikibase
+
+# clone the wikibase-docker-ideals repository using https (directions for ssh are below, but commented out)
+cd /home/wikibase
+git clone https://github.com/medusa-project/wikibase-docker-ideals.git
+
+# BELOW ARE INSTUCTIONS IF USING SSH to interact with github is neede - THESE STEPS ARE COMMENTED OUT.
 # setup ssh key for git hub
 # more info at: : https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
-mkdir .ssh
-cd .ssh
+# mkdir -p .ssh
+# cd .ssh
 # RUN the below  manually, as it prompts for file (leave blank), and pass phrase (leave blank):
-ssh-keygen -t ed25519 -C "jmtroy2@illinois.edu"
+# ssh-keygen -t ed25519 -C "jmtroy2@illinois.edu"
 # then run the below
-eval "$(ssh-agent -s)"
+# eval "$(ssh-agent -s)"
 # THEN A MANUAL STEP: Add ssh key to github (see: https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account 
-
 # Then change the directory back to /home/wikibase, and clone the wikibase-dockers-ideals.git
-cd /home/wikibase
-git clone git@github.com:medusa-project/wikibase-docker-ideals.git
+# cd /home/wikibase
+# git clone git@github.com:medusa-project/wikibase-docker-ideals.git
 
 # before running follow the instructions to create the .env file
 cp env-template .env
@@ -67,5 +72,3 @@ cd /home/wikibase
 docker-compose up
 # or to run int detached mode (in the background) use the -d option as below #
 docker-compose up -d
-
-
