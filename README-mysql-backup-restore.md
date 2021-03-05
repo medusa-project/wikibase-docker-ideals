@@ -140,5 +140,6 @@ docker-compose up
 ### References:
 
 Manual:Backing up a wiki: https://www.mediawiki.org/wiki/Manual:Backing_up_a_wiki
+
 Manual:Restoring a wiki from backup: https://www.mediawiki.org/wiki/Manual:Restoring_a_wiki_from_backup
 
