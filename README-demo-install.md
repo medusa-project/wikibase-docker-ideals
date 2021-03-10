@@ -31,7 +31,10 @@ Note: the Library's https://github.com/medusa-project/wikibase-docker-ideals rep
 cloned from the master branch, commit 7b52e2a (7b52e2a9cbe74ff40ff41adf493d7f4d20b21dd3) of 
 https://github.com/wmde/wikibase-docker
 
-Changes needed to get SPARQL queries to work:
+**Change to "hard code" the default docker network to 172.24.0.0/16**
+- This change is so the IP range of the default docker network is fixed to 172.24.0.0/16. This allows the firewall (iptables) on the EC2 to allow traffic from the docker containers (whose IPs fall in that range) to the localhost. The change was to add a networks section to the docker-compose.yml file with settings for the default network.
+
+**Changes needed to get SPARQL queries to work:**
 - In the docker-compose.yml file, in the "wdqs:" service section, and then in 
 the "environment:" section, the WIKIBASE_HOST environment variable is set to the IP 
 address and port 8181 of the host EC2.  Example:  **WIKIBASE_HOST=10.225.250.218:8181**.  
@@ -47,7 +50,7 @@ valid links to items.
 Once fully implemeted this variable will be set the system URL. Example: 
 **WIKIBASE_HOST=demo.authorities.library.illinois.edu**.
 
-Changes needed so new login validation and forgot password emails work:
+**Changes needed so new login validation and forgot password emails work:**
 - A new folder called "uiuc-library-config" was created for any files need to change 
 configuration settings for the UIUC Library.
 - The file ./wikibase/1.35/base/LocalSettings.php.template was copied to ./uiuc-library-config
@@ -58,13 +61,13 @@ These are the settings needed to get emails to work.
 the "volumes:" section, a line was added to mount the new file over the file in the docker container. 
 That line is **"- ./uiuc-library-config/LocalSettings.php.template:/LocalSettings.php.template"**.
 
-Changes to store secrets in a .env file, instead of storing them directly in the docker-compose.yml file. This
+**Changes to store secrets in a .env file**, instead of storing them directly in the docker-compose.yml file. This
 also includes updating the .gitignore file so that the .env is not stored in github repository.  A new
 file called env-template was created that has the template (but not the actual secrets) for the .env file contents.
 
 Changes to disable **Quickstatements** : In the docker-compose.yml the quickstatements section has been commented out.
 
-### Implementation instructions.
+### Installation Steps.
 
 ##### Provision AWS resources with terraform.
 
@@ -173,6 +176,8 @@ Example: ENV_VAR_sparkpostpass=**look in box or ask IMS for the sparkpost passwo
 or ENV_VAR_wikibase_host_and_port=**demo.authorities.library.illinois.edu**
 - Add any email address below so they are not stored in the public github. Example: NV_VAR_uiuc_email_sender=**<PUT EMAIL SENDING LOGIN CONFIRMATION AND PASSWORD CHANGE HERE>**
 
+##### Start Wikibase
+
 Once you have cloned the repo, installed dependencies and created/updated the .env file, you can now start wikibase docker.
 ```
 # to start wikibase
@@ -181,6 +186,36 @@ docker-compose up
 # or to run int detached mode (in the background) use the -d option as below #
 docker-compose up -d
 ```
+
+##### Run ansible kick starter scripts
+
+This section describes how the which playbooks were to initial the EC2 with settings recommended by IMS.
+Importantly, it also provided the order, and options to run each of the playbooks.
+
+The playbooks used were
+- new_server_tags.yml
+- aws_medusa_managed_state_demo_wikibase.yml
+- wikibase-demo.yml
+
+Assuming you have already cloned ansible-master to your local machine ( git clone https://code.library.illinois.edu/scm/ansible/ansible-master.git ),
+you will need to copy 2 playbooks from the templates folder up on level to the
+ansible-master folder:
+```
+cd ansible-master
+cp templates/aws_medusa_managed_state_demo_wikibase.yml ./
+cp templates/wikibase-demo.yml ./
+```
+
+Then from the ansible-master folder run the 3 playbooks:
+```
+ansible-playbook -i "aws-authorities-demo.library.illinois.edu," new_server_tags.yml --tags init,production,users,aws -u centos --private-key ~/.ssh/medusa_prod.pem --extra-vars "uiuc_fqdn=aws-authorities-demo.library.illinois.edu" --vault-password-file ~/.ansible/avp1.txt
+ansible-playbook -i "aws-authorities-demo.library.illinois.edu," aws_medusa_managed_state_demo_wikibase.yml -u centos --private-key ~/.ssh/medusa_prod.pem --vault-password-file ~/.ansible/avp1.txt
+ansible-playbook -i "aws-authorities-demo.library.illinois.edu," --vault-password-file ~/.ansible/avp1.txt wikibase-demo.yml
+```
+
+
+
+
 
 
 

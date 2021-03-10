@@ -153,6 +153,14 @@ services:
 #      - WB_ITEM_NAMESPACE=120
 #      - "WB_ITEM_PREFIX=Item:"
 
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.24.0.0/16
+
 volumes:
   mediawiki-mysql-data:
   mediawiki-images-data:
