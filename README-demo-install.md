@@ -82,7 +82,8 @@ Generally, the steps to provision the resources are:
 - logon to AWS login: aws login
 - AWS login will prompt for your password, request 2-factor authentication, and prompt you to select the proper AWS 
 account.
-- then run terraform plan to inspect the changes terraform plans to make: terraform plan
+- Change to the local repositories folder and Run: terraform init
+- Then run terraform plan to inspect the changes terraform plans to make: terraform plan
 - Then run terraform apply to make the changes: terraform apply
 
 ##### Install wikibase and dependencies on the EC2

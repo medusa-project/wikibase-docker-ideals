@@ -76,4 +76,8 @@ ${DOLLAR}wgSMTP['auth'] = true;
 ${DOLLAR}wgSMTP['username'] = "SMTP_Injection";
 ${DOLLAR}wgSMTP['password'] = "$SMTP_PASS";
 
+# more changes for UIUC Library - fix issues with Safari and Chrome browsers - Joe Troy 3/11/2021
+# for more info see: https://bugs.library.illinois.edu/browse/IR-137 and.or https://phabricator.wikimedia.org/T235554
+${DOLLAR}wgDisableOutputCompression = true;
+
 
