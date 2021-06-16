@@ -45,9 +45,9 @@ wikibase-docker-ideals_wdqs_1            /entrypoint.sh /runBlazegr ...   Up    
 wikibase-docker-ideals_wikibase_1        /bin/bash /entrypoint.sh         Up      0.0.0.0:8181->80/tcp
 
 # then using the mysql container name, run the command to create the backup file
-# be sure to change <pass word for wikiuser> to the actual password.
+# be sure to change <pass_word_for_wikiuser> to the actual password.
 
-docker exec wikibase-docker-ideals_mysql_1 -it mysqldump -u wikiuser -p<pass word for wikiuser> my_wiki > mybackup.sql
+docker exec -it wikibase-docker-ideals_mysql_1 mysqldump -u wikiuser --password=<pass_word_for_wikiuser> my_wiki > mybackup.sql
 ```
 After creating the backup file, check the file and make sure it was created successfully, sometimes the mysql 
 restarts itself and the backup fails.  if the output looks like it does below, try running
