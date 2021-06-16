@@ -97,7 +97,7 @@ docker cp mybackup.sql wikibase-docker-ideals_mysql_1:/
 # then start a terminal session within the container
 docker exec -it wikibase-docker-ideals_mysql_1 bash
 # then start a mysql command line sesion
-mysql -u wikiuser -p<wikiuser password>
+mysql -u wikiuser --password=<wikiuser password>
 # drop the my_wiki database
 MariaDB [(none)]> DROP DATABASE my_wiki;
 # create a new my_wiki database
@@ -105,7 +105,7 @@ MariaDB [(none)]> CREATE DATABASE my_wiki;
 # exit the mysql command line
 MariaDB [(none)]> exit
 # from the container command line, copy the backup.sql file into the my_wiki Database.
-mysql -u wikiuser -p<wikiuser password> my_wiki < backup0224a.sql
+mysql -u wikiuser --password=<wikiuser password> my_wiki < mybackup.sql
 # exit the container
 exit
 
